@@ -106,7 +106,7 @@
 	  'Boilerplate 3 project'
 	), document.getElementById('app'));
 
-	__webpack_require__(267);
+	__webpack_require__(245);
 
 /***/ },
 /* 7 */
@@ -26809,7 +26809,41 @@
 
 
 /***/ },
-/* 245 */,
+/* 245 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+	const redux = __webpack_require__(246);
+
+	console.log('Starting Todo App');
+
+	const stateDefault = {
+	  searchText: '',
+	  showCompleted: false,
+	  todos: []
+	};
+	const reducer = (state = stateDefault, action) => {
+	  const { type, searchText } = action;
+	  const switchCase = {
+	    CHANGE_SEARCH_TEXT: () => _extends({}, state, {
+	      searchText
+	    }),
+	    default: () => state
+	  };
+	  return (switchCase[type] || switchCase['default'])();
+	};
+	const store = redux.createStore(reducer);
+	console.log('currentState', store.getState());
+
+	store.dispatch({
+	  type: 'CHANGE_SEARCH_TEXT',
+	  searchText: 'work'
+	});
+
+	console.log('Search text should be work', store.getState());
+
+/***/ },
 /* 246 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -27841,30 +27875,6 @@
 	    }, last.apply(undefined, arguments));
 	  };
 	}
-
-/***/ },
-/* 267 */
-/***/ function(module, exports, __webpack_require__) {
-
-	const redux = __webpack_require__(246);
-
-	console.log('Starting Todo App');
-
-	const stateDefault = {
-	  searchText: '',
-	  showCompleted: false,
-	  todos: []
-	};
-
-	const reducer = (state = stateDefault, action) => {
-	  return state;
-	};
-
-	const store = redux.createStore(reducer);
-
-	const currentState = store.getState();
-
-	console.log('currentState', currentState);
 
 /***/ }
 /******/ ]);
