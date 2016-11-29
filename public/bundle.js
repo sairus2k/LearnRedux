@@ -105,8 +105,8 @@
 	//   document.getElementById('app')
 	// );
 
-	// require('./redux-example.jsx');
-	__webpack_require__(245);
+	__webpack_require__(267);
+	// require('./redux-todo-example.jsx');
 
 /***/ },
 /* 7 */
@@ -26809,55 +26809,7 @@
 
 
 /***/ },
-/* 245 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-
-	const redux = __webpack_require__(246);
-
-	console.log('Starting Todo App');
-
-	const stateDefault = {
-	  searchText: '',
-	  showCompleted: false,
-	  todos: []
-	};
-	const reducer = (state = stateDefault, action) => {
-	  const { type, searchText } = action;
-	  const switchCase = {
-	    CHANGE_SEARCH_TEXT: () => _extends({}, state, {
-	      searchText
-	    }),
-	    default: () => state
-	  };
-	  return (switchCase[type] || switchCase['default'])();
-	};
-	const composer = redux.compose(window.devToolsExtension ? window.devToolsExtension() : f => f);
-	const store = redux.createStore(reducer, composer);
-	const unsubscribe = store.subscribe(subscriber);
-
-	store.dispatch({
-	  type: 'CHANGE_SEARCH_TEXT',
-	  searchText: 'work'
-	});
-
-	store.dispatch({
-	  type: 'CHANGE_SEARCH_TEXT',
-	  searchText: 'dog'
-	});
-
-	store.dispatch({
-	  type: 'CHANGE_SEARCH_TEXT',
-	  searchText: 'something to change'
-	});
-
-	function subscriber() {
-	  const state = store.getState();
-	  document.getElementById('app').innerHTML = state.searchText;
-	}
-
-/***/ },
+/* 245 */,
 /* 246 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -27888,6 +27840,106 @@
 	      return f(composed);
 	    }, last.apply(undefined, arguments));
 	  };
+	}
+
+/***/ },
+/* 267 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+	const redux = __webpack_require__(246);
+
+	console.log('Starting redux example');
+
+	const defaultState = {
+	  name: 'Anonymous',
+	  hobbies: [],
+	  movies: []
+	};
+	let nextHobbyId = 1;
+	let nextMovieId = 1;
+	const reducer = (state = defaultState, action) => {
+	  const { type, name, hobby, title, genre, id } = action;
+	  const cases = {
+	    CHANGE_NAME: () => _extends({}, state, {
+	      name
+	    }),
+	    ADD_HOBBY: () => _extends({}, state, {
+	      hobbies: [...state.hobbies, {
+	        id: nextHobbyId++,
+	        hobby
+	      }]
+	    }),
+	    REMOVE_HOBBY: () => _extends({}, state, {
+	      hobbies: state.hobbies.filter(item => item.id !== id)
+	    }),
+	    ADD_MOVIE: () => _extends({}, state, {
+	      movies: [...state.movies, {
+	        id: nextMovieId++,
+	        title,
+	        genre
+	      }]
+	    }),
+	    REMOVE_MOVIE: () => _extends({}, state, {
+	      movies: state.movies.filter(item => item.id !== id)
+	    }),
+	    default: () => state
+	  };
+	  return (cases[type] || cases['default'])();
+	};
+
+	const composer = redux.compose(window.devToolsExtension ? window.devToolsExtension() : f => f);
+	const store = redux.createStore(reducer, composer);
+	const unsubscribe = store.subscribe(subscriber);
+
+	store.dispatch({
+	  type: 'CHANGE_NAME',
+	  name: 'Andrew'
+	});
+
+	// unsubscribe();
+	store.dispatch({
+	  type: 'ADD_HOBBY',
+	  hobby: 'Running'
+	});
+
+	store.dispatch({
+	  type: 'ADD_HOBBY',
+	  hobby: 'Walking'
+	});
+
+	store.dispatch({
+	  type: 'REMOVE_HOBBY',
+	  id: 2
+	});
+
+	store.dispatch({
+	  type: 'ADD_MOVIE',
+	  title: 'Terminator',
+	  genre: 'Action'
+	});
+
+	store.dispatch({
+	  type: 'ADD_MOVIE',
+	  title: 'Mad Max',
+	  genre: 'Action'
+	});
+
+	store.dispatch({
+	  type: 'REMOVE_MOVIE',
+	  id: 1
+	});
+
+	store.dispatch({
+	  type: 'CHANGE_NAME',
+	  name: 'Emily'
+	});
+
+	function subscriber() {
+	  const state = store.getState();
+	  console.log('New state', state);
+	  document.getElementById('app').innerHTML = state.name;
 	}
 
 /***/ }
