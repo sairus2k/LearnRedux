@@ -100,12 +100,12 @@
 	__webpack_require__(239);
 	__webpack_require__(243);
 
-	ReactDOM.render(React.createElement(
-	  'p',
-	  null,
-	  'Boilerplate 3 project'
-	), document.getElementById('app'));
+	// ReactDOM.render(
+	//   <p>Boilerplate 3 project</p>,
+	//   document.getElementById('app')
+	// );
 
+	// require('./redux-example.jsx');
 	__webpack_require__(245);
 
 /***/ },
@@ -26833,15 +26833,29 @@
 	  };
 	  return (switchCase[type] || switchCase['default'])();
 	};
-	const store = redux.createStore(reducer);
-	console.log('currentState', store.getState());
+	const composer = redux.compose(window.devToolsExtension ? window.devToolsExtension() : f => f);
+	const store = redux.createStore(reducer, composer);
+	const unsubscribe = store.subscribe(subscriber);
 
 	store.dispatch({
 	  type: 'CHANGE_SEARCH_TEXT',
 	  searchText: 'work'
 	});
 
-	console.log('Search text should be work', store.getState());
+	store.dispatch({
+	  type: 'CHANGE_SEARCH_TEXT',
+	  searchText: 'dog'
+	});
+
+	store.dispatch({
+	  type: 'CHANGE_SEARCH_TEXT',
+	  searchText: 'something to change'
+	});
+
+	function subscriber() {
+	  const state = store.getState();
+	  document.getElementById('app').innerHTML = state.searchText;
+	}
 
 /***/ },
 /* 246 */

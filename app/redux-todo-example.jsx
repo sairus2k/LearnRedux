@@ -18,12 +18,26 @@ const reducer = (state = stateDefault, action) => {
   };
   return (switchCase[type] || switchCase['default'])();
 };
-const store = redux.createStore(reducer);
-console.log('currentState', store.getState());
+const composer = redux.compose(window.devToolsExtension ? window.devToolsExtension() : f => f);
+const store = redux.createStore(reducer, composer);
+const unsubscribe = store.subscribe(subscriber);
 
 store.dispatch({
   type: 'CHANGE_SEARCH_TEXT',
   searchText: 'work'
 });
 
-console.log('Search text should be work', store.getState());
+store.dispatch({
+  type: 'CHANGE_SEARCH_TEXT',
+  searchText: 'dog'
+});
+
+store.dispatch({
+  type: 'CHANGE_SEARCH_TEXT',
+  searchText: 'something to change'
+});
+
+function subscriber() {
+  const state = store.getState();
+  document.getElementById('app').innerHTML = state.searchText;
+}

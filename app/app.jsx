@@ -6,9 +6,10 @@ const { Route, Router, IndexRoute, hashHistory } = require('react-router');
 require('foundation-sites/dist/foundation.min.css');
 require('./styles/app.scss');
 
-ReactDOM.render(
-  <p>Boilerplate 3 project</p>,
-  document.getElementById('app')
-);
+// ReactDOM.render(
+//   <p>Boilerplate 3 project</p>,
+//   document.getElementById('app')
+// );
 
+// require('./redux-example.jsx');
 require('./redux-todo-example.jsx');
