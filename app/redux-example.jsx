@@ -1,4 +1,5 @@
 const redux = require('redux');
+const axios = require('axios');
 
 let nextHobbyId = 1;
 let nextMovieId = 1;
@@ -6,7 +7,8 @@ let nextMovieId = 1;
 const reducer = redux.combineReducers({
   name: nameReducer,
   hobbies: hobbiesReducer,
-  movies: moviesReducer
+  movies: moviesReducer,
+  map: mapReducer
 });
 
 const composer = redux.compose(window.devToolsExtension ? window.devToolsExtension() : f => f);
@@ -34,12 +36,28 @@ const removeMovie = id => ({
   type: 'REMOVE_MOVIE',
   id
 });
+const startLocationFetch = () => ({
+  type: 'START_LOCATION_FETCH'
+});
+const completeLocationFetch = url => ({
+  type: 'COMPLETE_LOCATION_FETCH',
+  url
+});
 
+const fetchLocation = () => {
+  store.dispatch(startLocationFetch());
+  axios.get('http://ipinfo.io').then(res => {
+    const loc = res.data.loc;
+    const baseUrl = 'http://maps.google.com?q=';
+    store.dispatch(completeLocationFetch(baseUrl + loc));
+  })
+};
+fetchLocation();
 store.dispatch(changeName('Andrew'));
 store.dispatch(addHobby('Running'));
 store.dispatch(addHobby('Walking'));
 store.dispatch(removeHobby(2));
-store.dispatch(addMovie('Terminator','Action'));
+store.dispatch(addMovie('Terminator', 'Action'));
 store.dispatch(addMovie('Mad Max', 'Action'));
 store.dispatch(removeMovie(1));
 store.dispatch(changeName('Emily'));
@@ -47,7 +65,11 @@ store.dispatch(changeName('Emily'));
 function subscriber() {
   const state = store.getState();
   console.log('New state', state);
-  document.getElementById('app').innerHTML = state.name;
+  if (state.map.isFetching) {
+    document.getElementById('app').innerHTML = 'Loading...';
+  } else if (state.map.url) {
+    document.getElementById('app').innerHTML = `<a href="${state.map.url}" target="_blank">View Your Location</a>`;
+  }
 }
 
 function nameReducer(state = 'Anonymous', action) {
@@ -91,6 +113,24 @@ function moviesReducer(state = [], action) {
       ];
     case 'remove_movie':
       return state.filter(movie => movie.id !== id);
+    default:
+      return state;
+  }
+}
+
+function mapReducer(state = { isFetching: false, url: null }, action) {
+  const { url } = action;
+  switch (action.type) {
+    case 'START_LOCATION_FETCH':
+      return {
+        isFetching: true,
+        url: null
+      };
+    case 'COMPLETE_LOCATION_FETCH':
+      return {
+        isFetching: false,
+        url
+      };
     default:
       return state;
   }
