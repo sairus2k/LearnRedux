@@ -27848,8 +27848,6 @@
 
 	const redux = __webpack_require__(246);
 
-	console.log('Starting redux example');
-
 	let nextHobbyId = 1;
 	let nextMovieId = 1;
 
@@ -27863,48 +27861,36 @@
 	const store = redux.createStore(reducer, composer);
 	const unsubscribe = store.subscribe(subscriber);
 
-	store.dispatch({
+	const changeName = name => ({
 	  type: 'CHANGE_NAME',
-	  name: 'Andrew'
+	  name
 	});
-
-	// unsubscribe();
-	store.dispatch({
+	const addHobby = hobby => ({
 	  type: 'ADD_HOBBY',
-	  hobby: 'Running'
+	  hobby
 	});
-
-	store.dispatch({
-	  type: 'ADD_HOBBY',
-	  hobby: 'Walking'
-	});
-
-	store.dispatch({
+	const removeHobby = id => ({
 	  type: 'REMOVE_HOBBY',
-	  id: 2
+	  id
 	});
-
-	store.dispatch({
+	const addMovie = (title, genre) => ({
 	  type: 'ADD_MOVIE',
-	  title: 'Terminator',
-	  genre: 'Action'
+	  title,
+	  genre
 	});
-
-	store.dispatch({
-	  type: 'ADD_MOVIE',
-	  title: 'Mad Max',
-	  genre: 'Action'
-	});
-
-	store.dispatch({
+	const removeMovie = id => ({
 	  type: 'REMOVE_MOVIE',
-	  id: 1
+	  id
 	});
 
-	store.dispatch({
-	  type: 'CHANGE_NAME',
-	  name: 'Emily'
-	});
+	store.dispatch(changeName('Andrew'));
+	store.dispatch(addHobby('Running'));
+	store.dispatch(addHobby('Walking'));
+	store.dispatch(removeHobby(2));
+	store.dispatch(addMovie('Terminator', 'Action'));
+	store.dispatch(addMovie('Mad Max', 'Action'));
+	store.dispatch(removeMovie(1));
+	store.dispatch(changeName('Emily'));
 
 	function subscriber() {
 	  const state = store.getState();
